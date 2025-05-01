@@ -1,0 +1,6 @@
+---
+lookForAlignDelims:
+  tabular:
+    justification: left
+  tabularx:
+    justification: left

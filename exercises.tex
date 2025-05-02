@@ -33,7 +33,7 @@
 
 \section{Vol. 4B Ex. 11 p. 125, 2025-05-01}
 
-\begin{table}
+\begin{table}[h!]
 	\begin{center}
 		\caption{Initial memory layout}
 		\begin{tabular}{c c c c c c c c c }
@@ -73,42 +73,54 @@
 \end{figure}
 
 \noindent
-\begin{tabularx}{\textwidth}{c c c c c c c c c c c c c X}
+\begin{tabularx}{\textwidth}{c c c l c c c X}
 	\toprule
-	\textbf{Step} & $i$ & $l$ & $p$ & \rlink{l} & \llink{r} & \dlink{u} & \ulink{d} & \len{x} & \rlink{0}~$ = 0$ & $x_l = i$ & $p \ne x_l$ & $l = 0 $ & \textbf{Notes / Action}                                                                              \\
+	\textbf{Step} & $i$ & $l$ & $x_0x_1\ldots x_{l-1}$ & \rlink{0}~$ = 0$ & $x_l = i$ & $p \ne x_l$ & \textbf{Notes / Action}                                                                                 \\
 	\midrule
-	\textbf{X1.}  &     & 0   &     &           &           &           &           &         &                  &           &             &          & Initialization: \set{N}{7}, \set{Z}{30}, \set{l}{\rlink{0} = 0}                                      \\
-	\textbf{X2.}  &     &     &     & 1         &           &           &           &         & false            &           &             &          & \rlink{0}~$= 1$ $\Rightarrow$ enter level 0                                                          \\
-	\textbf{X3.}  & 1   &     &     &           &           &           &           &         &                  &           &             &          & Choose $i$ by MRV heuristic $(\min\{\texttt{LEN}\} = 2)$ from $i_1i_2\ldots i_t = \{1, 2, 3, 5, 6\}$ \\
-	\textbf{X4.}  &     &     &     &           &           &           &           &         &                  &           &             &          & Cover $i$.                                                                                           \\
+	\textbf{X1.}  &     & 0   &                        &                  &           &             & [Initialize.] \set{N}{7}, \set{Z}{30}, \set{l}{0}                                                       \\
+	\textbf{X2.}  &     &     &                        & false            &           &             & [Enter level $l$.] If \rlink{0}~$= 0$ visit solution specified in $x_0x_1\ldots x_{l-1}$ and go to X8.  \\
+	\textbf{X3.}  & 1   &     &                        &                  &           &             & [Choose $i$.] by MRV heuristic $(\min\{\texttt{LEN}\} = 2)$ from $i_1i_2\ldots i_t = \{1, 2, 3, 5, 6\}$ \\
+	\textbf{X4.}  &     &     & 12                     &                  &           &             & [Cover $i$.] Cover item $i$, then set \set{x_l}{\dlink{i}}.                                             \\
+	\textbf{X5.}  &     &     &                        &                  & false     &             & [Try $x_l$.]                                                                                            \\
 	\bottomrule
 \end{tabularx}
 
 \subsection{cover(1)}
 \noindent
-\begin{tabularx}{\textwidth}{c c c c c c c c c c c c c c c X}
+\begin{tabularx}{\textwidth}{c c c c c c X}
 	\toprule
-	\rlink{l} & \llink{r} & $l$ & $r$ & $p$ & \dlink{u} & \ulink{d} & \len{x} & $q$ & $x$  & $u$ & $d$ & $p \ne i$ & $q \ne p$ & $x \le 0$ & \textbf{Notes / Action}                                                                    \\
+	\rlink{l} & \llink{r} & $l$ & $r$ & $p$ & $p \ne i$ & \textbf{Notes / Action}                                                            \\
 	\midrule
-	          &           &     &     & 12  &           &           &         &     &      &     &     & true      &           &           & Set \set{p}{\dlink{i}}. While $p \ne i$, hide($p$), then set \set{p}{\dlink{p}} and repeat \\
-	\midrule
-	          &           &     &     &     &           &           &         &     &      &     &     &           &           &           & hide($p$)                                                                                  \\
-	          &           &     &     &     &           &           &         & 13  &      &     &     &           & true      &           & Set \set{q}{p+1}, and repeat while $q \ne p$                                               \\
-	          &           &     &     &     &           &           &         &     & 4    & 4   & 21  &           &           &           & \set{x}{\topp{q}}, \set{u}{\ulink{q}}, \set{d}{\dlink{q}}                                  \\
-	          &           &     &     &     & 21        & 4         & 2       & 14  &      &     &     &           &           & false     & \set{\dlink{u}}{d}, \set{\ulink{d}}{u}, \decr{\len{x}}, \incr{q}                           \\
-	          &           &     &     &     &           &           &         &     &      &     &     &           & true      &           & Repeat while $q \ne p$                                                                     \\
-	          &           &     &     &     &           &           &         &     & 7    & 7   & 25  &           &           &           & \set{x}{\topp{q}}, \set{u}{\ulink{q}}, \set{d}{\dlink{q}}                                  \\
-	          &           &     &     &     & 25        & 7         & 2       & 15  &      &     &     &           &           & false     & \set{\dlink{u}}{d}, \set{\ulink{d}}{u}, \decr{\len{x}}, \incr{q}                           \\
-	          &           &     &     &     &           &           &         &     &      &     &     &           & true      &           & Repeat while $q \ne p$                                                                     \\
-	          &           &     &     &     &           &           &         &     & $-2$ & 12  & 18  &           &           &           & \set{x}{\topp{q}}, \set{u}{\ulink{q}}, \set{d}{\dlink{q}}                                  \\
-	          &           &     &     &     &           &           &         & 12  &      &     &     &           &           & true      & \set{q}{u}                                                                                 \\
-	          &           &     &     &     &           &           &         &     &      &     &     &           & false     &           &                                                                                            \\
-	\midrule
-	          &           &     &     & 20  &           &           &         &     &      &     &     &           &           &           & Set \set{p}{\dlink{p}}                                                                     \\
+	          &           &     &     & 12  &           & Set \set{p}{\dlink{i}}.                                                            \\
+	          &           &     &     &     & true      & While $p \ne i$, hide($p$), then set \set{p}{\dlink{p}}                            \\
+	          &           &     &     &     &           & hide(12)                                                                           \\
+	          &           &     &     & 20  &           & Set \set{p}{\dlink{p}}                                                             \\
+	          &           &     &     &     & true      &                                                                                    \\
+	          &           &     &     &     &           & hide(20)                                                                           \\
+	          &           &     &     & 1   &           & Set \set{p}{\dlink{p}}                                                             \\
+	          &           &     &     &     & false     &                                                                                    \\
+	2         & 0         & 0   & 2   &     &           & Set \set{l}{\llink{i}}, \set{r}{\rlink{i}}, \set{\rlink{l}}{r}, \set{\llink{r}}{l} \\
 	\bottomrule
 \end{tabularx}
 
-\begin{table}
+\subsubsection{hide(12)}
+\begin{tabularx}{\textwidth}{c c c c c c c c c c X}
+	\toprule
+	\dlink{u} & \ulink{d} & \len{x} & $q$ & $x$  & $u$ & $d$ & $p \ne i$ & $q \ne p$ & $x \le 0$ & \textbf{Notes / Action}                                          \\
+	          &           &         & 13  &      &     &     &           & true      &           & Set \set{q}{p+1}, and repeat while $q \ne p$                     \\
+	          &           &         &     & 4    & 4   & 21  &           &           &           & \set{x}{\topp{q}}, \set{u}{\ulink{q}}, \set{d}{\dlink{q}}        \\
+	21        & 4         & 2       & 14  &      &     &     &           &           & false     & \set{\dlink{u}}{d}, \set{\ulink{d}}{u}, \decr{\len{x}}, \incr{q} \\
+	          &           &         &     &      &     &     &           & true      &           & Repeat while $q \ne p$                                           \\
+	          &           &         &     & 7    & 7   & 25  &           &           &           & \set{x}{\topp{q}}, \set{u}{\ulink{q}}, \set{d}{\dlink{q}}        \\
+	25        & 7         & 2       & 15  &      &     &     &           &           & false     & \set{\dlink{u}}{d}, \set{\ulink{d}}{u}, \decr{\len{x}}, \incr{q} \\
+	          &           &         &     &      &     &     &           & true      &           & Repeat while $q \ne p$                                           \\
+	          &           &         &     & $-2$ & 12  & 18  &           &           &           & \set{x}{\topp{q}}, \set{u}{\ulink{q}}, \set{d}{\dlink{q}}        \\
+	          &           &         & 12  &      &     &     &           &           & true      & \set{q}{u}                                                       \\
+	          &           &         &     &      &     &     &           & false     &           &                                                                  \\
+	\bottomrule
+\end{tabularx}
+
+\begin{table}[h!]
 	\begin{center}
 		\caption{Memory layout after hide(12)}
 		\begin{tabular}{c c c c c c c c c }
@@ -142,29 +154,24 @@
 \end{table}
 
 \subsubsection{hide(20)}
-\begin{tabularx}{\textwidth}{c c c c c c c c c c c c c c c X}
+\begin{tabularx}{\textwidth}{c c c c c c c c c c X}
 	\toprule
-	\rlink{l} & \llink{r} & $l$ & $r$ & $p$ & \dlink{u} & \ulink{d} & \len{x} & $q$ & $x$  & $u$ & $d$ & $p \ne i$ & $q \ne p$ & $x \le 0$ & \textbf{Notes / Action}                                                            \\
+	\dlink{u} & \ulink{d} & \len{x} & $q$ & $x$  & $u$ & $d$ & $p \ne i$ & $q \ne p$ & $x \le 0$ & \textbf{Notes / Action}                                          \\
 	\midrule
-	          &           &     &     &     &           &           &         &     &      &     &     & true      &           &           & hide($p$)                                                                          \\
-	          &           &     &     &     &           &           &         & 21  &      &     &     &           & true      &           & Set \set{q}{p+1}, and repeat while $q \ne p$                                       \\
-	          &           &     &     &     &           &           &         &     & 4    & 4   & 27  &           &           &           & \set{x}{\topp{q}}, \set{u}{\ulink{q}}, \set{d}{\dlink{q}}                          \\
-	          &           &     &     &     & 27        & 4         & 1       & 22  &      &     &     &           &           & false     & \set{\dlink{u}}{d}, \set{\ulink{d}}{u}, \decr{\len{x}}, \incr{q}                   \\
-	          &           &     &     &     &           &           &         &     &      &     &     &           & true      &           & Repeat while $q \ne p$                                                             \\
-	          &           &     &     &     &           &           &         &     & 6    & 18  & 6   &           &           &           & \set{x}{\topp{q}}, \set{u}{\ulink{q}}, \set{d}{\dlink{q}}                          \\
-	          &           &     &     &     & 6         & 18        & 1       & 23  &      &     &     &           &           & false     & \set{\dlink{u}}{d}, \set{\ulink{d}}{u}, \decr{\len{x}}, \incr{q}                   \\
-	          &           &     &     &     &           &           &         &     &      &     &     &           & true      &           & Repeat while $q \ne p$                                                             \\
-	          &           &     &     &     &           &           &         &     & $-4$ & 20  & 25  &           &           &           & \set{x}{\topp{q}}, \set{u}{\ulink{q}}, \set{d}{\dlink{q}}                          \\
-	          &           &     &     &     &           &           &         & 20  &      &     &     &           &           & true      & \set{q}{u}                                                                         \\
-	          &           &     &     &     &           &           &         &     &      &     &     &           & false     &           & Repeat while $q \ne p$                                                             \\
-	\midrule
-	          &           &     &     & 1   &           &           &         &     &      &     &     &           &           &           & (back in cover) Set \set{p}{\dlink{p}}                                             \\
-	          &           &     &     &     &           &           &         &     &      &     &     & false     &           &           &                                                                                    \\
-	2         & 0         & 0   & 2   &     &           &           &         &     &      &     &     &           &           &           & Set \set{l}{\llink{i}}, \set{r}{\rlink{i}}, \set{\rlink{l}}{r}, \set{\llink{r}}{l} \\
+	          &           &         & 21  &      &     &     &           & true      &           & Set \set{q}{p+1}, and repeat while $q \ne p$                     \\
+	          &           &         &     & 4    & 4   & 27  &           &           &           & \set{x}{\topp{q}}, \set{u}{\ulink{q}}, \set{d}{\dlink{q}}        \\
+	27        & 4         & 1       & 22  &      &     &     &           &           & false     & \set{\dlink{u}}{d}, \set{\ulink{d}}{u}, \decr{\len{x}}, \incr{q} \\
+	          &           &         &     &      &     &     &           & true      &           & Repeat while $q \ne p$                                           \\
+	          &           &         &     & 6    & 18  & 6   &           &           &           & \set{x}{\topp{q}}, \set{u}{\ulink{q}}, \set{d}{\dlink{q}}        \\
+	6         & 18        & 1       & 23  &      &     &     &           &           & false     & \set{\dlink{u}}{d}, \set{\ulink{d}}{u}, \decr{\len{x}}, \incr{q} \\
+	          &           &         &     &      &     &     &           & true      &           & Repeat while $q \ne p$                                           \\
+	          &           &         &     & $-4$ & 20  & 25  &           &           &           & \set{x}{\topp{q}}, \set{u}{\ulink{q}}, \set{d}{\dlink{q}}        \\
+	          &           &         & 20  &      &     &     &           &           & true      & \set{q}{u}                                                       \\
+	          &           &         &     &      &     &     &           & false     &           & Repeat while $q \ne p$                                           \\
 	\bottomrule
 \end{tabularx}
 
-\begin{table}
+\begin{table}[h!]
 	\begin{center}
 		\caption{Memory layout after cover(1)}
 		\begin{tabular}{c c c c c c c c c }
@@ -203,18 +210,22 @@
 	\includegraphics[width=0.5\textwidth]{vol4b_ex11_p125_2.png}
 \end{figure}
 
-\noindent
-\begin{tabularx}{\textwidth}{c c c c c c c c c c c c c X}
-	\toprule
-	\textbf{Step} & $i$ & $l$ & $p$ & \rlink{l} & \llink{r} & \dlink{u} & \ulink{d} & \len{x} & \rlink{0}~$ = 0$ & $x_l = i$ & $p \ne x_l$ & $l = 0 $ & \textbf{Notes / Action}  \\
-	\textbf{X4.}  & (1) & (0) &     &           &           &           &           &         &                  &           &             &          & Set \set{x_l}{\dlink{i}} \\
-	\textbf{X5.}  &     &     &     &           &           &           &           &         &                  &           &             &          &                          \\
-	\textbf{X6.}  &     &     &     &           &           &           &           &         &                  &           &             &          &                          \\
-	\textbf{X7.}  &     &     &     &           &           &           &           &         &                  &           &             &          &                          \\
-	\textbf{X8.}  &     &     &     &           &           &           &           &         &                  &           &             &          &                          \\
-	\bottomrule
-\end{tabularx}
+\subsection{X5. Try $x_0$}
+
+% \begin{tabularx}{\textwidth}{c c c c c c X}
+% 	\toprule
+% 	\rlink{l} & \llink{r} & $l$ & $r$ & $p$ & $p \ne i$ & \textbf{Notes / Action}                                                            \\
+% 	\midrule
+% 	          &           &     &     & 12  &           & Set \set{p}{\dlink{i}}.                                                            \\
+% 	          &           &     &     &     & true      & While $p \ne i$, hide($p$), then set \set{p}{\dlink{p}}                            \\
+% 	          &           &     &     &     &           & hide(12)                                                                           \\
+% 	          &           &     &     & 20  &           & Set \set{p}{\dlink{p}}                                                             \\
+% 	          &           &     &     &     & true      &                                                                                    \\
+% 	          &           &     &     &     &           & hide(20)                                                                           \\
+% 	          &           &     &     & 1   &           & Set \set{p}{\dlink{p}}                                                             \\
+% 	          &           &     &     &     & false     &                                                                                    \\
+% 	2         & 0         & 0   & 2   &     &           & Set \set{l}{\llink{i}}, \set{r}{\rlink{i}}, \set{\rlink{l}}{r}, \set{\llink{r}}{l} \\
+% 	\bottomrule
+% \end{tabularx}
 
 \end{document}
-
-% $x_0x_1\ldots x_{l-1}$

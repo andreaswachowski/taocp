@@ -1,16 +1,10 @@
-TARGET = exercises
-
-LATEX = pdflatex
-RM = rm -f
-
-# Default target
-all: $(TARGET).pdf
-
-$(TARGET).pdf: $(TARGET).tex
-	$(LATEX) $(TARGET).tex
-	$(LATEX) $(TARGET).tex  # Run twice for cross-references
+pdf:
+	latexmk -pdf exercises
 
 clean:
-	$(RM) $(TARGET).aux $(TARGET).log $(TARGET).out $(TARGET).toc $(TARGET).pdf
+	latexmk -c
 
-.PHONY: all clean
+distclean:
+	latexmk -C
+
+.PHONY: all pdf clean distclean

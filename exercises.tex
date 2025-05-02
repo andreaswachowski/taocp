@@ -1,5 +1,6 @@
 % vi: tw=0 nowrap
 \documentclass[a4paper,landscape,11pt]{article}
+\usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{tabularx}
@@ -17,12 +18,20 @@
 \newcommand{\len}[1]{\texttt{LEN}(#1)}
 
 \title{The Art of Computer Programming---Exercises}
+\author{Andreas Wachowski}
 \date{}
 \begin{document}
 
 \maketitle
 
-\section*{Vol. 4B Ex. 11 p. 125, 2025-05-01}
+\thispagestyle{empty}
+\tableofcontents
+\listoffigures
+\listoftables
+\newpage
+\pagenumbering{arabic}
+
+\section{Vol. 4B Ex. 11 p. 125, 2025-05-01}
 
 \begin{table}
 	\begin{center}
@@ -57,6 +66,12 @@
 	\end{center}
 \end{table}
 
+\begin{figure}[h]
+	\caption{Initial memory layout}
+	\centering
+	\includegraphics[width=0.5\textwidth]{vol4b_ex11_p125_1.png}
+\end{figure}
+
 \noindent
 \begin{tabularx}{\textwidth}{c c c c c c c c c c c c c X}
 	\toprule
@@ -69,7 +84,7 @@
 	\bottomrule
 \end{tabularx}
 
-\subsection*{cover(1)}
+\subsection{cover(1)}
 \noindent
 \begin{tabularx}{\textwidth}{c c c c c c c c c c c c c c c X}
 	\toprule
@@ -126,7 +141,7 @@
 	\end{center}
 \end{table}
 
-\subsubsection*{hide(20)}
+\subsubsection{hide(20)}
 \begin{tabularx}{\textwidth}{c c c c c c c c c c c c c c c X}
 	\toprule
 	\rlink{l} & \llink{r} & $l$ & $r$ & $p$ & \dlink{u} & \ulink{d} & \len{x} & $q$ & $x$  & $u$ & $d$ & $p \ne i$ & $q \ne p$ & $x \le 0$ & \textbf{Notes / Action}                                                            \\
@@ -181,6 +196,12 @@
 		\end{tabular}
 	\end{center}
 \end{table}
+
+\begin{figure}[h]
+	\caption{Memory layout after cover(1)}
+	\centering
+	\includegraphics[width=0.5\textwidth]{vol4b_ex11_p125_2.png}
+\end{figure}
 
 \noindent
 \begin{tabularx}{\textwidth}{c c c c c c c c c c c c c X}
